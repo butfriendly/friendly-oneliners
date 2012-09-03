@@ -2,10 +2,20 @@
 import sys
 import os.path
 
-from time import time
+from datetime import datetime
+from time import mktime, time, strptime
+
 
 basename = os.path.basename(sys.argv[0])
-if basename == 'jtimestamp':
-    print int(time() * 1000)
+if len(sys.argv) > 1:
+    if sys.argv[1] == '-?' or (len(sys.argv[1]) not in [8,12,14]):
+        print "Usage: %s [YYYYMMDD[HHMM[SS]]]"%basename
+        sys.exit()
+    time_format = '%Y%m%d%H%M%S'[:len(sys.argv[1]) - 2] 
+    t = mktime(strptime(sys.argv[1], time_format))
 else:
-    print time()
+    t = time()
+if basename == 'jtimestamp':
+    print int(t * 1000)
+else:
+    print t
